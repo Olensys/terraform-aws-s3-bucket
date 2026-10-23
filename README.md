@@ -8,7 +8,7 @@ Private, encrypted, TLS-only S3 bucket with optional versioning, lifecycle and C
 - A bucket policy denying requests without `aws:SecureTransport` is always attached; a policy passed in `bucket_policy_json` is merged with it.
 - Object ownership is `BucketOwnerEnforced`, so ACLs are disabled.
 - Encryption is SSE-S3 (`AES256`) by default and SSE-KMS (`aws:kms`) when `kms_key_arn` is given.
-- Versioning is off, `force_destroy` is off, and incomplete multipart uploads are aborted after 7 days unless a lifecycle rule says otherwise.
+- Versioning is off, `force_destroy` is off, and each lifecycle rule aborts incomplete multipart uploads after 7 days unless `abort_incomplete_multipart_days` says otherwise.
 
 ## Usage
 
