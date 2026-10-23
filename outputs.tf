@@ -1,20 +1,24 @@
 output "id" {
-  description = "Identifier of the primary resource. Null when create is false."
-  value       = var.create ? var.name : null
+  description = "Name (ID) of the bucket. Null when create is false."
+  value       = var.create ? module.this.s3_bucket_id : null
 }
 
 output "name" {
-  description = "Name of the primary resource. Null when create is false."
+  description = "Name of the bucket. Null when create is false."
   value       = var.create ? var.name : null
 }
 
-# GCP modules replace this output with `self_link`. Replace `null` with the resource's ARN.
 output "arn" {
-  description = "ARN of the primary resource. Null when create is false."
-  value       = null
+  description = "ARN of the bucket. Null when create is false."
+  value       = var.create ? module.this.s3_bucket_arn : null
+}
+
+output "bucket_regional_domain_name" {
+  description = "Region-specific domain name of the bucket. Null when create is false."
+  value       = var.create ? module.this.s3_bucket_bucket_regional_domain_name : null
 }
 
 output "tags" {
-  description = "Tags applied to every taggable resource, with context.extra_tags merged in. Null when create is false."
+  description = "Tags applied to the bucket, with context.extra_tags merged in. Null when create is false."
   value       = var.create ? local.tags : null
 }

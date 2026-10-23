@@ -1,1 +1,5 @@
 # One ID per line, each with a justification comment.
+# Access logging needs a caller-owned log bucket; callers attach logging outside this module.
+AWS-0089
+# Versioning is an explicit opt-in (versioning_enabled) so cost-sensitive buckets can stay unversioned.
+AWS-0090
