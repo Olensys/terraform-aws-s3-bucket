@@ -39,31 +39,34 @@ run "test_create_false_plans_nothing" {
   }
 }
 
-# The four public-access-block flags are literals in main.tf with no input to weaken them;
-# upstream exposes no output for them, so this run proves the hardened configuration plans.
+# SMOKE: asserts only that the bucket plans and output.name matches; the four public-access-block
+# flags are literals in main.tf and upstream exposes no output for them. The real check lives in
+# complete.tftest.hcl (apply) and trivy.
 run "test_public_access_blocked_by_default" {
   command = plan
 
   assert {
     condition     = output.name == var.name
-    error_message = "The bucket must plan with the public-access-block configuration."
+    error_message = "The bucket must plan and expose its name."
   }
 }
 
-# The rendered policy JSON comes from a mocked data source, so assert the policy is attached:
-# upstream only creates it when the deny-insecure-transport flag (or another policy source)
-# is set. Applied against the mock because Terraform treats mocked computed values as unknown
+# SMOKE: asserts only that a bucket policy is attached, not that it contains aws:SecureTransport
+# (the rendered JSON comes from a mocked data source). The real check lives in complete.tftest.hcl
+# and trivy. Upstream only creates the policy when the deny-insecure-transport flag (or another
+# policy source) is set. Applied against the mock because Terraform treats mocked computed values as unknown
 # at plan time.
 run "test_tls_enforced" {
   command = apply
 
   assert {
     condition     = module.this.s3_bucket_policy != null
-    error_message = "A bucket policy carrying the aws:SecureTransport deny statement must be attached."
+    error_message = "A bucket policy must be attached."
   }
 }
 
-# Upstream exposes no output for the encryption rule; this run proves the SSE-KMS path plans.
+# SMOKE: asserts only that the bucket plans with kms_key_arn set and output.name matches; upstream
+# exposes no output for the encryption rule. The real check lives in complete.tftest.hcl and trivy.
 run "test_kms_when_key_given" {
   command = plan
 
@@ -73,7 +76,7 @@ run "test_kms_when_key_given" {
 
   assert {
     condition     = output.name == var.name
-    error_message = "The bucket must plan with an SSE-KMS configuration."
+    error_message = "The bucket must plan with kms_key_arn set and expose its name."
   }
 }
 
@@ -100,7 +103,33 @@ run "test_tags_propagated" {
   }
 }
 
-run "test_lifecycle_and_cors_map_to_upstream" {
+run "test_tags_contract" {
+  command = plan
+
+  variables {
+    tags = { Owner = "x" }
+    context = {
+      organization = "olensys"
+      environment  = "test"
+      application  = "example"
+      owner        = "platform"
+      cost_center  = "eng"
+      extra_tags   = { Owner = "y", Team = "z" }
+    }
+  }
+
+  assert {
+    condition     = output.tags.Owner == "x"
+    error_message = "var.tags must win over context.extra_tags."
+  }
+
+  assert {
+    condition     = output.tags.Team == "z"
+    error_message = "context.extra_tags must be merged into tags."
+  }
+}
+
+run "test_versioning_and_lifecycle_map_to_upstream" {
   command = apply
 
   variables {
@@ -110,10 +139,6 @@ run "test_lifecycle_and_cors_map_to_upstream" {
       prefix                     = "logs/"
       expiration_days            = 30
       noncurrent_expiration_days = 7
-    }]
-    cors_rules = [{
-      allowed_origins = ["https://example.com"]
-      allowed_methods = ["GET"]
     }]
   }
 
