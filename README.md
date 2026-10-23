@@ -1,6 +1,6 @@
-# __NAME__
+# terraform-aws-s3-bucket
 
-__DESCRIPTION__
+Private, encrypted, TLS-only S3 bucket with optional versioning, lifecycle and CORS
 
 ## Opinions
 
@@ -10,7 +10,7 @@ __DESCRIPTION__
 
 ```hcl
 module "this" {
-  source = "git::https://github.com/Olensys/__NAME__.git?ref=v1.0.0"
+  source = "git::https://github.com/Olensys/terraform-aws-s3-bucket.git?ref=v1.0.0"
 
   name = "example"
   context = {
