@@ -8,22 +8,22 @@ Private, encrypted, TLS-only S3 bucket with optional versioning, lifecycle and C
 - A bucket policy denying requests without `aws:SecureTransport` is always attached; a policy passed in `bucket_policy_json` is merged with it.
 - Object ownership is `BucketOwnerEnforced`, so ACLs are disabled.
 - Encryption is SSE-S3 (`AES256`) by default and SSE-KMS (`aws:kms`) when `kms_key_arn` is given.
-- Versioning is off, `force_destroy` is off, and each lifecycle rule aborts incomplete multipart uploads after 7 days unless `abort_incomplete_multipart_days` says otherwise.
+- Versioning defaults to on in prod and off elsewhere (override with `versioning_enabled`), `force_destroy` is off, and each lifecycle rule aborts incomplete multipart uploads after 7 days unless `abort_incomplete_multipart_days` says otherwise.
 
 ## Usage
 
 ```hcl
-module "this" {
-  source = "git::https://github.com/Olensys/terraform-aws-s3-bucket.git?ref=v1.0.0"
+module "naming" {
+  source  = "git::https://github.com/Olensys/terraform-null-naming.git?ref=v1.0.1"
+  context = var.context
+}
 
-  name = "example"
-  context = {
-    organization = "olensys"
-    environment  = "dev"
-    application  = "example"
-    owner        = "platform"
-    cost_center  = "eng"
-  }
+module "s3_bucket" {
+  source  = "git::https://github.com/Olensys/terraform-aws-s3-bucket.git?ref=v1.1.0"
+  name    = module.naming.name
+  context = var.context
+
+  tags = module.naming.tags
 }
 ```
 
@@ -62,7 +62,7 @@ No resources.
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | ARN of a KMS key for SSE-KMS. When null, the bucket uses SSE-S3 (AES256). | `string` | `null` | no |
 | <a name="input_lifecycle_rules"></a> [lifecycle\_rules](#input\_lifecycle\_rules) | Lifecycle rules. expiration\_days expires current versions; noncurrent\_expiration\_days expires noncurrent versions; prefix limits a rule to a key prefix. | <pre>list(object({<br/>    id                              = string<br/>    prefix                          = optional(string)<br/>    expiration_days                 = optional(number)<br/>    noncurrent_expiration_days      = optional(number)<br/>    abort_incomplete_multipart_days = optional(number, 7)<br/>  }))</pre> | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags merged onto every taggable resource, applied last. | `map(string)` | `{}` | no |
-| <a name="input_versioning_enabled"></a> [versioning\_enabled](#input\_versioning\_enabled) | Whether object versioning is enabled. | `bool` | `false` | no |
+| <a name="input_versioning_enabled"></a> [versioning\_enabled](#input\_versioning\_enabled) | Whether object versioning is enabled. Null (the default) means enabled in prod and disabled elsewhere; set true or false to override. | `bool` | `null` | no |
 
 ## Outputs
 

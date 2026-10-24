@@ -31,9 +31,9 @@ variable "create" {
 }
 
 variable "versioning_enabled" {
-  description = "Whether object versioning is enabled."
+  description = "Whether object versioning is enabled. Null (the default) means enabled in prod and disabled elsewhere; set true or false to override."
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "kms_key_arn" {

@@ -3,6 +3,8 @@
 locals {
   # Merge onto every taggable resource, with var.tags applied last.
   tags = merge(var.context.extra_tags, var.tags)
+
+  versioning_enabled = coalesce(var.versioning_enabled, var.context.environment == "prod")
 }
 
 module "this" {
@@ -26,7 +28,7 @@ module "this" {
   attach_policy = var.bucket_policy_json != null
   policy        = var.bucket_policy_json
 
-  versioning = { enabled = var.versioning_enabled }
+  versioning = { enabled = local.versioning_enabled }
 
   server_side_encryption_configuration = {
     rule = {

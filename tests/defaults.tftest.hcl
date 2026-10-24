@@ -152,3 +152,61 @@ run "test_versioning_and_lifecycle_map_to_upstream" {
     error_message = "lifecycle_rules must reach the upstream module."
   }
 }
+
+run "test_versioning_default_on_in_prod" {
+  command = apply
+
+  variables {
+    context = {
+      organization = "olensys"
+      environment  = "prod"
+      application  = "example"
+      owner        = "platform"
+      cost_center  = "eng"
+    }
+  }
+
+  assert {
+    condition     = module.this.aws_s3_bucket_versioning_status == "Enabled"
+    error_message = "Versioning must default to enabled in prod."
+  }
+}
+
+run "test_versioning_default_off_in_dev" {
+  command = apply
+
+  variables {
+    context = {
+      organization = "olensys"
+      environment  = "dev"
+      application  = "example"
+      owner        = "platform"
+      cost_center  = "eng"
+    }
+  }
+
+  assert {
+    condition     = module.this.aws_s3_bucket_versioning_status != "Enabled"
+    error_message = "Versioning must default to disabled outside prod."
+  }
+}
+
+run "test_versioning_override_wins_in_prod" {
+  command = apply
+
+  variables {
+    versioning_enabled = false
+    context = {
+      organization = "olensys"
+      environment  = "prod"
+      application  = "example"
+      owner        = "platform"
+      cost_center  = "eng"
+    }
+  }
+
+  assert {
+    condition     = module.this.aws_s3_bucket_versioning_status != "Enabled"
+    error_message = "An explicit versioning_enabled = false must win over the prod default."
+  }
+}
