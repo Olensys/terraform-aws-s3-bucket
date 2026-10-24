@@ -1,7 +1,7 @@
 name: terraform-aws-s3-bucket
 cloud: aws          # aws | google | common
 tier: capability          # primitive | capability | blueprint
-maturity: experimental    # experimental | stable | deprecated
+maturity: stable    # experimental | stable | deprecated
 description: Private, encrypted, TLS-only S3 bucket with optional versioning, lifecycle and CORS
 owners: [platform]
 upstream: "terraform-aws-modules/s3-bucket/aws 5.17.0"
