@@ -12,7 +12,7 @@ locals {
   context = {
     organization = "olensys"
     environment  = "test"
-    application  = "example"
+    application  = "s3"
     owner        = "platform"
     cost_center  = "eng"
   }
