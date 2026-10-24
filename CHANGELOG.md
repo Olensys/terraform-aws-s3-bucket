@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.0
+
+### Behaviour changes
+
+- `versioning_enabled` now defaults to `null`, which resolves to enabled when `context.environment` is `prod` and disabled otherwise. A prod bucket that must stay unversioned needs `versioning_enabled = false`; existing prod buckets will have versioning enabled on the next apply unless that is set.
+
+### Fixes
+
+- Versioning default follows the environment (`coalesce(var.versioning_enabled, var.context.environment == "prod")`).
+
+### Tests
+
+- Added prod default on, dev default off and explicit-override-wins runs.
+
+### Docs
+
+- README Opinions and Usage updated; Usage shows the naming module.
+
 ## 1.0.1
 
 ### Fixes
