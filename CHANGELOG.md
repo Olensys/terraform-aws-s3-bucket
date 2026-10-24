@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/Olensys/terraform-aws-s3-bucket/compare/v1.1.0...v1.1.1) (2026-10-24)
+
+
+### Bug Fixes
+
+* **examples:** pin naming module to v1.0.1 ([892c21c](https://github.com/Olensys/terraform-aws-s3-bucket/commit/892c21cfaaed6a4602d7898e90241d5c9e19dbea))
+* run integration on change and weekly instead of nightly ([b5047f2](https://github.com/Olensys/terraform-aws-s3-bucket/commit/b5047f2d239f3ee564eea3149432052ae75f68c4))
+
 ## 1.1.0
 
 ### Behaviour changes
