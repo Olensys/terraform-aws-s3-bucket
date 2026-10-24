@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Olensys/terraform-aws-s3-bucket/compare/v1.1.1...v1.1.2) (2026-10-24)
+
+
+### Bug Fixes
+
+* **examples:** unique application slug so concurrent integration runs do not collide ([#2](https://github.com/Olensys/terraform-aws-s3-bucket/issues/2)) ([157ad24](https://github.com/Olensys/terraform-aws-s3-bucket/commit/157ad24ff38bbc53b7e4a33d94f059ac531fc82b))
+
 ## [1.1.1](https://github.com/Olensys/terraform-aws-s3-bucket/compare/v1.1.0...v1.1.1) (2026-10-24)
 
 
