@@ -36,6 +36,16 @@ variable "versioning_enabled" {
   default     = null
 }
 
+variable "versioning_status" {
+  description = "Exact versioning status: Enabled, Suspended or Disabled. Overrides versioning_enabled when set. Disabled is only valid for a bucket that has never had versioning; use it to adopt such a bucket without changing its status to Suspended."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.versioning_status == null || contains(["Enabled", "Suspended", "Disabled"], coalesce(var.versioning_status, "Enabled"))
+    error_message = "versioning_status must be Enabled, Suspended or Disabled."
+  }
+}
+
 variable "kms_key_arn" {
   description = "ARN of a KMS key for SSE-KMS. When null, the bucket uses SSE-S3 (AES256)."
   type        = string

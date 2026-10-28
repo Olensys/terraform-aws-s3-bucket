@@ -28,7 +28,7 @@ module "this" {
   attach_policy = var.bucket_policy_json != null
   policy        = var.bucket_policy_json
 
-  versioning = { enabled = local.versioning_enabled }
+  versioning = var.versioning_status != null ? { status = var.versioning_status } : { enabled = local.versioning_enabled }
 
   server_side_encryption_configuration = {
     rule = {

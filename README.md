@@ -8,6 +8,7 @@ Private, encrypted, TLS-only S3 bucket with optional versioning, lifecycle and C
 - A bucket policy denying requests without `aws:SecureTransport` is always attached; a policy passed in `bucket_policy_json` is merged with it.
 - Object ownership is `BucketOwnerEnforced`, so ACLs are disabled.
 - Encryption is SSE-S3 (`AES256`) by default and SSE-KMS (`aws:kms`) when `kms_key_arn` is given.
+- `versioning_status` sets the exact status (`Enabled`, `Suspended` or `Disabled`) and overrides `versioning_enabled`; `Disabled` adopts a never-versioned bucket without turning it into `Suspended`.
 - Versioning defaults to on in prod and off elsewhere (override with `versioning_enabled`), `force_destroy` is off, and each lifecycle rule aborts incomplete multipart uploads after 7 days unless `abort_incomplete_multipart_days` says otherwise.
 
 ## Usage
@@ -63,6 +64,7 @@ No resources.
 | <a name="input_lifecycle_rules"></a> [lifecycle\_rules](#input\_lifecycle\_rules) | Lifecycle rules. expiration\_days expires current versions; noncurrent\_expiration\_days expires noncurrent versions; prefix limits a rule to a key prefix. | <pre>list(object({<br/>    id                              = string<br/>    prefix                          = optional(string)<br/>    expiration_days                 = optional(number)<br/>    noncurrent_expiration_days      = optional(number)<br/>    abort_incomplete_multipart_days = optional(number, 7)<br/>  }))</pre> | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags merged onto every taggable resource, applied last. | `map(string)` | `{}` | no |
 | <a name="input_versioning_enabled"></a> [versioning\_enabled](#input\_versioning\_enabled) | Whether object versioning is enabled. Null (the default) means enabled in prod and disabled elsewhere; set true or false to override. | `bool` | `null` | no |
+| <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | Exact versioning status: Enabled, Suspended or Disabled. Overrides versioning\_enabled when set. Disabled is only valid for a bucket that has never had versioning; use it to adopt such a bucket without changing its status to Suspended. | `string` | `null` | no |
 
 ## Outputs
 

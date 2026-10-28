@@ -172,6 +172,29 @@ run "test_versioning_default_on_in_prod" {
   }
 }
 
+run "test_versioning_status_disabled" {
+  command = apply
+
+  variables {
+    versioning_status = "Disabled"
+  }
+
+  assert {
+    condition     = module.this.aws_s3_bucket_versioning_status == "Disabled"
+    error_message = "versioning_status must set the exact status."
+  }
+}
+
+run "test_versioning_status_validation" {
+  command = plan
+
+  variables {
+    versioning_status = "Off"
+  }
+
+  expect_failures = [var.versioning_status]
+}
+
 run "test_versioning_default_off_in_dev" {
   command = apply
 
