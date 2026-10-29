@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Olensys/terraform-aws-s3-bucket/compare/v1.1.2...v1.2.0) (2026-10-29)
+
+
+### Features
+
+* add versioning_status ([#5](https://github.com/Olensys/terraform-aws-s3-bucket/issues/5)) ([8f6f5de](https://github.com/Olensys/terraform-aws-s3-bucket/commit/8f6f5decc871e959c0bff540f147a33591e74f3d))
+
 ## [1.1.2](https://github.com/Olensys/terraform-aws-s3-bucket/compare/v1.1.1...v1.1.2) (2026-10-24)
 
 
